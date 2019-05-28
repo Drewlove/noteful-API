@@ -1,31 +1,32 @@
-const path = require('path')
 const express = require('express')
+const path = require('path')
+const Service = require('./service')
 const xss = require('xss')
 const logger = require('../logger')
-const Service = require('./service')
-
-//Rename table and array properties
-const table = 'table_one'
-const properties = ['first_name', 'age']
-
-
 const router = express.Router()
 const bodyParser = express.json()
 
+//Rename table and array properties
+const table = 'notes'
+const properties = ['folder_id', 'name', 'content']
+// name, folder_id, content
+
+
 //Rename properties and values
-const serializeItem= item => ({
+const serializeItem = item => ({
   id: item.id,
-  first_name: xss(item.first_name),
-  age: item.age
+  folder_id: item.folder_id, 
+  name: xss(item.name),
+  content: xss(item.content)
 })
 
 router
-  .route('/')
+  .route('')
   
   .get((req, res, next) => {
     Service.getAll(req.app.get('db'))
-      .then(item => {
-        res.json(item.map(serializeItem))
+      .then(items => {
+        res.json(items.map(serializeItem))
       })
       .catch(next)
   })

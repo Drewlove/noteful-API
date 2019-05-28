@@ -1,9 +1,11 @@
 //Rename table
-const table = 'table_one'
+const table = 'notes'
 
 const Service = {
   getAll(knex) {
-    return knex.select('*').from(table)
+    return knex
+    .select('*')
+    .from(table)
   },
   getById(knex, id) {
     return knex.from(table).select('*').where('id', id).first()

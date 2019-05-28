@@ -1,21 +1,19 @@
 const knex = require('knex')
-const {makeItemsArray, makeMaliciousItem} = require('./table_one-fixtures')
+const {makeItemsArray, makeMaliciousItem} = require('./folders-fixtures')
 const app = require('../src/app')
 
 //Rename table and properties array
-const table = 'table_one' 
-const properties = ['first_name', 'age']
+const table = 'folders' 
+const properties = ['name']
 
 const newItem = {
-  first_name: 'Jonny Boy', 
-  age: 24
+  name: 'new item'
 }
 const patchItemSomeFields = {
-  age: 5000
+  name: 'patched name'
 }
 const patchItemAllFields = {
-  first_name: 'New name', 
-  age: 1000
+  name: 'patched name, all fields updated'
 }
 
 describe(`${table} Endpoints`, () => {
@@ -81,7 +79,7 @@ describe(`${table} Endpoints`, () => {
   })
 
   describe(`GET /api/${table}`, () => {
-    context(`Given no table_one`, () => {
+    context(`Given no ${table}`, () => {
       it(`responds with 200 and an empty list`, () => {
         return supertest(app)
           .get(`/api/${table}`)
@@ -122,8 +120,7 @@ describe(`${table} Endpoints`, () => {
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
           .expect(200)
           .expect(res => {
-            expect(res.body[0].first_name).to.eql(expectedItem.first_name)
-            expect(res.body[0].age).to.eql(expectedItem.age)
+            expect(res.body[0].name).to.eql(expectedItem.name)
           })
       })
     })
@@ -219,12 +216,12 @@ describe(`${table} Endpoints`, () => {
       })
     })
   })
+  //meow
 //Rename name and age properties below with properties of actual table
   describe(`POST /api/${table}`, () => {
     properties.forEach(field => {
       const newItem = {
-        first_name: 'New Name', 
-        age: 1000
+        name: 'New Name'
       }
 
       it(`responds with 400 missing '${field}' if not supplied`, () => {
@@ -250,8 +247,7 @@ describe(`${table} Endpoints`, () => {
         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
         .expect(201)
         .expect(res => {
-          expect(res.body.first_name).to.eql(newItem.first_name)
-          expect(res.body.age).to.eql(newItem.age)
+          expect(res.body.name).to.eql(newItem.name)
           expect(res.body).to.have.property('id')
           expect(res.headers.location).to.eql(`/api/${table}/${res.body.id}`)
         })
@@ -272,7 +268,7 @@ describe(`${table} Endpoints`, () => {
         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
         .expect(201)
         .expect(res => {
-          expect(res.body.first_name).to.eql(expectedItem.first_name)
+          expect(res.body.name).to.eql(expectedItem.name)
         })
     })
   })
